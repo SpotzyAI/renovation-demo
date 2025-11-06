@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Home Renovation Consultation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f0f0f0;
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .benefits {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            color: #333;
+        }
+
+        .benefit-item::before {
+            content: "✓";
+            color: #333;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="tel"],
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="tel"]:focus,
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #333;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            background: #222222;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .privacy-text {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .success-message.active {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .success-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+        }
+
+        .success-message h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .success-message p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="formSection">
+            <div class="header">
+                <div class="icon">🏠</div>
+                <h1>Get Your Free Home Renovation Consultation</h1>
+                <p class="subtitle">Transform your space with expert guidance. Enter your phone number and we'll call you back in seconds!</p>
+            </div>
+
+            <div class="benefits">
+                <div class="benefit-item">Free expert consultation</div>
+                <div class="benefit-item">No obligation quote</div>
+                <div class="benefit-item">Financing options available</div>
+                <div class="benefit-item">Instant callback</div>
+            </div>
+
+            <form id="callbackForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        placeholder="John Smith" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input 
+                        type="tel" 
+                        id="phone" 
+                        name="phone" 
+                        placeholder="+1 (555) 123-4567" 
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span id="btnText">📞 Call Me Now</span>
+                    <span id="btnLoading" style="display: none;"><span class="loading"></span></span>
+                </button>
+
+                <div class="error-message" id="errorMessage"></div>
+            </form>
+
+            <p class="privacy-text">
+                🔒 Your information is secure and will only be used to contact you about your renovation project.
+            </p>
+        </div>
+
+        <div id="successSection" class="success-message">
+            <div class="success-icon">✅</div>
+            <h2>Request Submitted!</h2>
+            <p>We're calling you right now! Please answer the phone to speak with our renovation specialist.</p>
+            <p style="margin-top: 15px; font-size: 14px; color: #999;">
+                Don't see a call? Check your phone for incoming calls.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // CONFIGURATION - CHANGE THESE VALUES
+        // ========================================
+        const SPOTZY_CONFIG = {
+            // Spotzy API endpoint for making calls
+            apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
+            
+            // Replace with your Spotzy Assistant ID (find this in your Spotzy dashboard)
+            assistantId: 6540
+            
+            // Replace with your Spotzy API Key (Bearer token)
+            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212' 
+        // ========================================
+
+        const form = document.getElementById('callbackForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoading = document.getElementById('btnLoading');
+        const errorMessage = document.getElementById('errorMessage');
+        const formSection = document.getElementById('formSection');
+        const successSection = document.getElementById('successSection');
+
+        // Phone number formatting
+        const phoneInput = document.getElementById('phone');
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 0) {
+                if (value.length <= 3) {
+                    value = `+1 (${value}`;
+                } else if (value.length <= 6) {
+                    value = `+1 (${value.slice(0, 3)}) ${value.slice(3)}`;
+                } else {
+                    value = `+1 (${value.slice(0, 3)}) ${value.slice(3, 6)}-${value.slice(6, 10)}`;
+                }
+                e.target.value = value;
+            }
+        });
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.replace(/\D/g, '');
+            
+            // Validation
+            if (!name || name.length < 2) {
+                showError('Please enter a valid name');
+                return;
+            }
+            
+            if (phone.length < 10) {
+                showError('Please enter a valid phone number');
+                return;
+            }
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            errorMessage.classList.remove('active');
+
+            try {
+                // Make API call to Spotzy
+                const response = await fetch(SPOTZY_CONFIG.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SPOTZY_CONFIG.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        phone_number: `+1${phone}`,
+                        assistant_id: SPOTZY_CONFIG.assistantId,
+                        variables: {
+                            customer_name: name
+                        }
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Success! Show success message
+                    console.log('Call initiated:', data.message);
+                    formSection.style.display = 'none';
+                    successSection.classList.add('active');
+                } else {
+                    throw new Error(data.message || 'Failed to initiate call');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Something went wrong. Please try again or call us directly at (555) 123-4567');
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline-block';
+                btnLoading.style.display = 'none';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.add('active');
+            setTimeout(() => {
+                errorMessage.classList.remove('active');
+            }, 5000);
+        }
+
+        // ========================================
+        // FOR TESTING WITHOUT SPOTZY API
+        // Remove this section when you have real API
+        // ========================================
+        // Uncomment below to test the success flow without API
+        /*
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'inline-block';
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            formSection.style.display = 'none';
+            successSection.classList.add('active');
+        });
+        */
+    </script>
+</body>
+</html>
