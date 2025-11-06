@@ -457,6 +457,9 @@
             <p style="margin-top: 15px; font-size: 14px; color: #999;">
                 Don't see a call? Check your phone for incoming calls.
             </p>
+            <button class="submit-btn" id="backBtn" style="margin-top: 25px; background: #666;">
+                ← Back to Form
+            </button>
         </div>
     </div>
 
@@ -614,6 +617,23 @@
         // Initialize country list
         renderCountries();
 
+        // Phone input - allow only numbers
+        phoneInput.addEventListener('input', function(e) {
+            // Remove any non-digit characters
+            this.value = this.value.replace(/\D/g, '');
+        });
+
+        // Prevent non-numeric keypress
+        phoneInput.addEventListener('keypress', function(e) {
+            // Allow only numbers (0-9)
+            if (e.key < '0' || e.key > '9') {
+                // Allow backspace, delete, arrow keys, etc.
+                if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
+                    e.preventDefault();
+                }
+            }
+        });
+
         // Notification function
         function showNotification(message, duration = 5000) {
             const notification = document.getElementById('notification');
@@ -658,26 +678,39 @@
                 // Make API call to Spotzy
                 const fullPhoneNumber = `${selectedCountry.code}${phone}`;
                 
+                const requestBody = {
+                    phone_number: fullPhoneNumber,
+                    assistant_id: SPOTZY_CONFIG.assistantId,
+                    variables: {
+                        customer_name: name
+                    }
+                };
+
+                // Debug logging
+                console.log('🔵 API Request Details:');
+                console.log('URL:', SPOTZY_CONFIG.apiUrl);
+                console.log('Assistant ID:', SPOTZY_CONFIG.assistantId);
+                console.log('Phone Number:', fullPhoneNumber);
+                console.log('Customer Name:', name);
+                console.log('Full Request Body:', JSON.stringify(requestBody, null, 2));
+                
                 const response = await fetch(SPOTZY_CONFIG.apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${SPOTZY_CONFIG.apiKey}`
                     },
-                    body: JSON.stringify({
-                        phone_number: fullPhoneNumber,
-                        assistant_id: SPOTZY_CONFIG.assistantId,
-                        variables: {
-                            customer_name: name
-                        }
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
+                console.log('🔵 API Response Status:', response.status);
+                
                 const data = await response.json();
+                console.log('🔵 API Response Data:', data);
 
                 if (response.ok) {
                     // Success! Show success message and notification
-                    console.log('Call initiated:', data.message);
+                    console.log('✅ Call initiated:', data.message);
                     showNotification('✅ Success! We are calling you right now. Please answer your phone!', 7000);
                     
                     // Wait a bit before showing success screen
@@ -686,10 +719,11 @@
                         successSection.classList.add('active');
                     }, 1000);
                 } else {
+                    console.error('❌ API Error:', data);
                     throw new Error(data.message || 'Failed to initiate call');
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error Details:', error);
                 showError('Something went wrong. Please try again or call us directly.');
                 showNotification('❌ Error: Could not initiate call. Please try again.', 5000);
                 
@@ -707,6 +741,31 @@
                 errorMessage.classList.remove('active');
             }, 5000);
         }
+
+        // Back button functionality
+        document.getElementById('backBtn').addEventListener('click', function() {
+            // Hide success section
+            successSection.classList.remove('active');
+            
+            // Show form section
+            formSection.style.display = 'block';
+            
+            // Reset form
+            form.reset();
+            
+            // Reset to Cyprus default
+            selectedCountry = countries[0];
+            selectedFlag.textContent = countries[0].flag;
+            selectedCode.textContent = countries[0].code;
+            
+            // Reset button state
+            submitBtn.disabled = false;
+            btnText.style.display = 'inline-block';
+            btnLoading.style.display = 'none';
+            
+            // Clear any errors
+            errorMessage.classList.remove('active');
+        });
     </script>
 </body>
 </html>
