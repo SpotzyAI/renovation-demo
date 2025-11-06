@@ -610,6 +610,23 @@
         // Initialize country list
         renderCountries();
 
+        // Name input - allow only letters and spaces
+        const nameInput = document.getElementById('name');
+        
+        nameInput.addEventListener('input', function(e) {
+            // Remove any non-letter characters except spaces
+            this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+        });
+
+        // Prevent non-letter keypress in name field
+        nameInput.addEventListener('keypress', function(e) {
+            const char = e.key;
+            // Allow only letters and space
+            if (!/[a-zA-Z\s]/.test(char)) {
+                e.preventDefault();
+            }
+        });
+
         // Phone input - allow only numbers
         phoneInput.addEventListener('input', function(e) {
             // Remove any non-digit characters
