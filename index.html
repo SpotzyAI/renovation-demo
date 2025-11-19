@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Home Renovation Consultation</title>
+    <title>Free Home Renovation Consultation - Florida</title>
     <style>
         * {
             margin: 0;
@@ -387,7 +387,7 @@
             <div class="header">
                 <div class="icon">🏠</div>
                 <h1>Get Your Free Home Renovation Consultation</h1>
-                <p class="subtitle">Transform your space with expert guidance. Enter your phone number and we'll call you back in seconds!</p>
+                <p class="subtitle">Transform your space with expert guidance. Enter your information and we'll call you back in seconds!</p>
             </div>
 
             <form id="callbackForm">
@@ -428,6 +428,18 @@
                             required
                         >
                     </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Property Address <span class="required-indicator">*</span></label>
+                    <input 
+                        type="text" 
+                        id="address" 
+                        name="address" 
+                        placeholder="123 Main Street, City, FL 33XXX"
+                        value="1524 Northeast 182nd Street, North Miami Beach, FL 33162"
+                        required
+                    >
                 </div>
 
                 <button type="submit" class="submit-btn" id="submitBtn">
@@ -476,62 +488,48 @@
             { name: "Italy", code: "+39", flag: "🇮🇹" },
             { name: "Spain", code: "+34", flag: "🇪🇸" },
             { name: "Canada", code: "+1", flag: "🇨🇦" },
-            { name: "Australia", code: "+61", flag: "🇦🇺" },
-            { name: "China", code: "+86", flag: "🇨🇳" },
-            { name: "Japan", code: "+81", flag: "🇯🇵" },
-            { name: "India", code: "+91", flag: "🇮🇳" },
-            { name: "Brazil", code: "+55", flag: "🇧🇷" },
-            { name: "Russia", code: "+7", flag: "🇷🇺" },
-            { name: "South Korea", code: "+82", flag: "🇰🇷" },
-            { name: "Mexico", code: "+52", flag: "🇲🇽" },
-            { name: "Netherlands", code: "+31", flag: "🇳🇱" },
-            { name: "Belgium", code: "+32", flag: "🇧🇪" },
-            { name: "Switzerland", code: "+41", flag: "🇨🇭" },
-            { name: "Austria", code: "+43", flag: "🇦🇹" },
-            { name: "Poland", code: "+48", flag: "🇵🇱" },
-            { name: "Sweden", code: "+46", flag: "🇸🇪" },
-            { name: "Norway", code: "+47", flag: "🇳🇴" },
-            { name: "Denmark", code: "+45", flag: "🇩🇰" },
-            { name: "Finland", code: "+358", flag: "🇫🇮" },
-            { name: "Portugal", code: "+351", flag: "🇵🇹" },
-            { name: "Ireland", code: "+353", flag: "🇮🇪" },
-            { name: "Czech Republic", code: "+420", flag: "🇨🇿" },
-            { name: "Romania", code: "+40", flag: "🇷🇴" },
-            { name: "Hungary", code: "+36", flag: "🇭🇺" },
-            { name: "Bulgaria", code: "+359", flag: "🇧🇬" },
-            { name: "Turkey", code: "+90", flag: "🇹🇷" },
-            { name: "Israel", code: "+972", flag: "🇮🇱" },
-            { name: "UAE", code: "+971", flag: "🇦🇪" },
-            { name: "Saudi Arabia", code: "+966", flag: "🇸🇦" },
-            { name: "Egypt", code: "+20", flag: "🇪🇬" },
-            { name: "South Africa", code: "+27", flag: "🇿🇦" },
-            { name: "Nigeria", code: "+234", flag: "🇳🇬" },
-            { name: "Singapore", code: "+65", flag: "🇸🇬" },
-            { name: "Malaysia", code: "+60", flag: "🇲🇾" },
-            { name: "Thailand", code: "+66", flag: "🇹🇭" },
-            { name: "Philippines", code: "+63", flag: "🇵🇭" },
-            { name: "Indonesia", code: "+62", flag: "🇮🇩" },
-            { name: "Vietnam", code: "+84", flag: "🇻🇳" },
-            { name: "New Zealand", code: "+64", flag: "🇳🇿" },
-            { name: "Argentina", code: "+54", flag: "🇦🇷" },
-            { name: "Chile", code: "+56", flag: "🇨🇱" },
-            { name: "Colombia", code: "+57", flag: "🇨🇴" }
+            { name: "Australia", code: "+61", flag: "🇦🇺" }
         ];
 
         // ========================================
-        // CONFIGURATION
+        // CONFIGURATION FOR YOUR SPOTZY AGENT
         // ========================================
         const SPOTZY_CONFIG = {
             // Spotzy API endpoint for making calls
             apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
             
-            // Spotzy Assistant ID
-            assistantId: 6540,
             
-            // Spotzy API Key (Bearer token)
-            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212'
+            assistantId: 7018, // 
+            
+            
+            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212' // 
         };
-        // ========================================
+
+        // Array of sample Florida addresses for randomization
+        const floridaAddresses = [
+            "1524 Northeast 182nd Street, North Miami Beach, FL 33162",
+            "7856 SW 152nd Avenue, Miami, FL 33193",
+            "3421 Northwest 36th Street, Miami, FL 33142",
+            "9823 Sunset Drive, Miami, FL 33173",
+            "4567 Collins Avenue, Miami Beach, FL 33140",
+            "2341 Biscayne Boulevard, Miami, FL 33137",
+            "6789 SW 8th Street, Miami, FL 33144",
+            "5432 NW 7th Street, Miami, FL 33126",
+            "8901 Coral Way, Miami, FL 33165",
+            "1234 Ocean Drive, Miami Beach, FL 33139",
+            "4810 Southwest 152nd Place, Miami, FL 33185",
+            "6831 West 14th Court, Hialeah, FL 33014",
+            "15770 Cypress Creek Lane, Wellington, FL 33414",
+            "323 Chatham Street, West Palm Beach, FL 33417",
+            "7171 Southwest 9th Street, Pembroke Pines, FL 33023"
+        ];
+
+        // Set a random Florida address on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const addressInput = document.getElementById('address');
+            const randomIndex = Math.floor(Math.random() * floridaAddresses.length);
+            addressInput.value = floridaAddresses[randomIndex];
+        });
 
         // Country selector elements
         const countrySelectBtn = document.getElementById('countrySelectBtn');
@@ -618,30 +616,10 @@
             this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
         });
 
-        // Prevent non-letter keypress in name field
-        nameInput.addEventListener('keypress', function(e) {
-            const char = e.key;
-            // Allow only letters and space
-            if (!/[a-zA-Z\s]/.test(char)) {
-                e.preventDefault();
-            }
-        });
-
-        // Phone input - allow only numbers
+        // Format phone number as user types (more flexible for international)
         phoneInput.addEventListener('input', function(e) {
-            // Remove any non-digit characters
+            // Only keep numbers
             this.value = this.value.replace(/\D/g, '');
-        });
-
-        // Prevent non-numeric keypress
-        phoneInput.addEventListener('keypress', function(e) {
-            // Allow only numbers (0-9)
-            if (e.key < '0' || e.key > '9') {
-                // Allow backspace, delete, arrow keys, etc.
-                if (!['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key)) {
-                    e.preventDefault();
-                }
-            }
         });
 
         // Notification function
@@ -663,6 +641,7 @@
             
             const name = document.getElementById('name').value.trim();
             const phone = phoneInput.value.replace(/\D/g, '');
+            const address = document.getElementById('address').value.trim();
             
             // Validation
             if (!name || name.length < 2) {
@@ -670,8 +649,13 @@
                 return;
             }
             
-            if (phone.length < 6) {
+            if (phone.length < 6 || phone.length > 15) {
                 showError('Please enter a valid phone number');
+                return;
+            }
+
+            if (!address || address.length < 10) {
+                showError('Please enter a valid address');
                 return;
             }
 
@@ -685,14 +669,20 @@
             showNotification('⏳ Processing your request... We will call you in a few seconds!', 3000);
 
             try {
-                // Make API call to Spotzy
+                // Format phone with selected country code
                 const fullPhoneNumber = `${selectedCountry.code}${phone}`;
                 
+                // Create request body with all the variables your agent needs
                 const requestBody = {
                     phone_number: fullPhoneNumber,
                     assistant_id: SPOTZY_CONFIG.assistantId,
                     variables: {
-                        customer_name: name
+                        customer_name: name,
+                        property_address: address,
+                        appointment_type: "home_renovation_consultation",
+                        discount_code: "73689", // 13% discount code from the transcripts
+                        company_name: "Nation One Services",
+                        program_type: "Green Energy Program"
                     }
                 };
 
@@ -702,6 +692,7 @@
                 console.log('Assistant ID:', SPOTZY_CONFIG.assistantId);
                 console.log('Phone Number:', fullPhoneNumber);
                 console.log('Customer Name:', name);
+                console.log('Property Address:', address);
                 console.log('Full Request Body:', JSON.stringify(requestBody, null, 2));
                 
                 const response = await fetch(SPOTZY_CONFIG.apiUrl, {
@@ -763,10 +754,10 @@
             // Reset form
             form.reset();
             
-            // Reset to Cyprus default
-            selectedCountry = countries[0];
-            selectedFlag.textContent = countries[0].flag;
-            selectedCode.textContent = countries[0].code;
+            // Set a new random address
+            const addressInput = document.getElementById('address');
+            const randomIndex = Math.floor(Math.random() * floridaAddresses.length);
+            addressInput.value = floridaAddresses[randomIndex];
             
             // Reset button state
             submitBtn.disabled = false;
