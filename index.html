@@ -499,10 +499,10 @@
             apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
             
             
-            assistantId: 7018, // 
+            assistantId: 7018, 
             
-           
-            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212'
+            
+            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212' 
         };
 
         // Array of sample Florida addresses for randomization
@@ -678,8 +678,7 @@
                     assistant_id: SPOTZY_CONFIG.assistantId,
                     variables: {
                         customer_name: name,
-                        property_address: address,
-                        phone_number: fullPhoneNumber
+                        property_address: address
                     }
                 };
 
@@ -748,13 +747,10 @@
             // Show form section
             formSection.style.display = 'block';
             
-            // Reset form
+            // Reset form but keep the same address
+            const currentAddress = document.getElementById('address').value;
             form.reset();
-            
-            // Set a new random address
-            const addressInput = document.getElementById('address');
-            const randomIndex = Math.floor(Math.random() * floridaAddresses.length);
-            addressInput.value = floridaAddresses[randomIndex];
+            document.getElementById('address').value = currentAddress;
             
             // Reset button state
             submitBtn.disabled = false;
