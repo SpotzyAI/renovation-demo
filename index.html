@@ -495,14 +495,15 @@
         // CONFIGURATION FOR YOUR SPOTZY AGENT
         // ========================================
         const SPOTZY_CONFIG = {
-            // Spotzy API endpoint for making calls
+            // Call API settings
             apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
+            assistantId: 7018, // <-- CHANGE THIS TO YOUR AGENT'S ID
+            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212', // <-- CHANGE THIS TO YOUR API KEY
             
-            
-            assistantId: 7018, 
-            
-            
-            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212' 
+            // Lead API settings  
+            leadApiUrl: 'https://platform.spotzyai.com/api/user/lead',
+            campaignId: 4425, // <-- YOUR CAMPAIGN ID
+            leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596' // <-- YOUR LEAD API KEY
         };
 
         // Array of sample Florida addresses for randomization
@@ -672,7 +673,7 @@
                 // Format phone with selected country code
                 const fullPhoneNumber = `${selectedCountry.code}${phone}`;
                 
-                // Create request body with all the variables your agent needs
+                // First API call - Make the phone call
                 const requestBody = {
                     phone_number: fullPhoneNumber,
                     assistant_id: SPOTZY_CONFIG.assistantId,
@@ -691,7 +692,8 @@
                 console.log('Property Address:', address);
                 console.log('Full Request Body:', JSON.stringify(requestBody, null, 2));
                 
-                const response = await fetch(SPOTZY_CONFIG.apiUrl, {
+                // Make the call API request
+                const callResponse = await fetch(SPOTZY_CONFIG.apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -700,14 +702,43 @@
                     body: JSON.stringify(requestBody)
                 });
 
-                console.log('🔵 API Response Status:', response.status);
+                console.log('🔵 Call API Response Status:', callResponse.status);
                 
-                const data = await response.json();
-                console.log('🔵 API Response Data:', data);
+                const callData = await callResponse.json();
+                console.log('🔵 Call API Response Data:', callData);
 
-                if (response.ok) {
-                    // Success! Show success message and notification
-                    console.log('✅ Call initiated:', data.message);
+                // Second API call - Save lead data
+                const leadRequestBody = {
+                    phone_number: fullPhoneNumber,
+                    campaign_id: SPOTZY_CONFIG.campaignId,
+                    variables: {
+                        customer_name: name,
+                        property_address: address
+                    },
+                    allow_dupplicate: false,
+                    customer_name: name,
+                    property_address: address
+                };
+
+                console.log('📊 Saving lead data...');
+                
+                // Save lead API request
+                const leadResponse = await fetch(SPOTZY_CONFIG.leadApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${SPOTZY_CONFIG.leadApiKey}`
+                    },
+                    body: JSON.stringify(leadRequestBody)
+                });
+
+                const leadData = await leadResponse.json();
+                console.log('📊 Lead API Response:', leadData);
+
+                // Check both responses
+                if (callResponse.ok && leadResponse.ok) {
+                    // Both successful!
+                    console.log('✅ Call initiated and lead saved successfully');
                     showNotification('✅ Success! We are calling you right now. Please answer your phone!', 7000);
                     
                     // Wait a bit before showing success screen
@@ -715,9 +746,19 @@
                         formSection.style.display = 'none';
                         successSection.classList.add('active');
                     }, 1000);
+                } else if (callResponse.ok && !leadResponse.ok) {
+                    // Call worked but lead save failed - still show success since call is more important
+                    console.warn('⚠️ Call initiated but lead save failed');
+                    showNotification('✅ We are calling you right now. Please answer your phone!', 7000);
+                    
+                    setTimeout(() => {
+                        formSection.style.display = 'none';
+                        successSection.classList.add('active');
+                    }, 1000);
                 } else {
-                    console.error('❌ API Error:', data);
-                    throw new Error(data.message || 'Failed to initiate call');
+                    // Call failed
+                    console.error('❌ API Error:', callData);
+                    throw new Error(callData.message || 'Failed to initiate call');
                 }
             } catch (error) {
                 console.error('❌ Error Details:', error);
