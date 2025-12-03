@@ -620,7 +620,10 @@
             // Lead API settings  
             leadApiUrl: 'https://platform.spotzyai.com/api/user/lead',
             campaignId: 4425, // <-- YOUR CAMPAIGN ID
-            leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596' // <-- YOUR LEAD API KEY
+            leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596', // <-- YOUR LEAD API KEY
+            
+            // Make.com Webhook
+            webhookUrl: 'https://hook.eu2.make.com/as9hhqsp6usr04kcppa3prdkdyav58ep'
         };
 
         // Set a random Florida address on page load
@@ -902,6 +905,33 @@
 
                 const leadData = await leadResponse.json();
                 console.log('📊 Lead API Response:', leadData);
+
+                // Third API call - Send to Make.com Webhook
+                console.log('🔗 Sending data to Make.com webhook...');
+                const webhookData = {
+                    customer_name: name,
+                    phone_number: fullPhoneNumber,
+                    property_address: address,
+                    timestamp: new Date().toISOString()
+                };
+
+                try {
+                    const webhookResponse = await fetch(SPOTZY_CONFIG.webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(webhookData)
+                    });
+                    
+                    if (webhookResponse.ok) {
+                        console.log('✅ Webhook triggered successfully');
+                    } else {
+                        console.warn('⚠️ Webhook failed but continuing...');
+                    }
+                } catch (webhookError) {
+                    console.warn('⚠️ Webhook error (non-critical):', webhookError);
+                }
 
                 // Check both responses
                 if (callResponse.ok && leadResponse.ok) {
