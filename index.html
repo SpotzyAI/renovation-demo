@@ -215,6 +215,32 @@
             font-size: 13px;
         }
 
+        .custom-code-input {
+            display: none;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .custom-code-input.active {
+            display: block;
+        }
+
+        .custom-code-input input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .custom-code-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
         #phone {
             flex: 1;
         }
@@ -418,6 +444,10 @@
                                     <input type="text" id="countrySearch" placeholder="Search country...">
                                 </div>
                                 <div id="countryList"></div>
+                                <div class="custom-code-input" id="customCodeInput">
+                                    <label class="custom-code-label">Enter custom country code (e.g., +123)</label>
+                                    <input type="text" id="customCode" placeholder="+123">
+                                </div>
                             </div>
                         </div>
                         <input 
@@ -476,35 +506,88 @@
 
     <script>
         // ========================================
-        // COUNTRY DATA WITH FLAGS
+        // COUNTRY DATA WITH FLAGS - EXTENDED LIST
         // ========================================
         const countries = [
+            // Mediterranean & Middle East
             { name: "Cyprus", code: "+357", flag: "🇨🇾" },
-            { name: "United States", code: "+1", flag: "🇺🇸" },
-            { name: "United Kingdom", code: "+44", flag: "🇬🇧" },
             { name: "Greece", code: "+30", flag: "🇬🇷" },
+            { name: "Israel", code: "+972", flag: "🇮🇱" },
+            { name: "Turkey", code: "+90", flag: "🇹🇷" },
+            { name: "Lebanon", code: "+961", flag: "🇱🇧" },
+            { name: "Jordan", code: "+962", flag: "🇯🇴" },
+            { name: "Egypt", code: "+20", flag: "🇪🇬" },
+            { name: "Saudi Arabia", code: "+966", flag: "🇸🇦" },
+            { name: "United Arab Emirates", code: "+971", flag: "🇦🇪" },
+            
+            // Europe
+            { name: "United Kingdom", code: "+44", flag: "🇬🇧" },
             { name: "Germany", code: "+49", flag: "🇩🇪" },
             { name: "France", code: "+33", flag: "🇫🇷" },
             { name: "Italy", code: "+39", flag: "🇮🇹" },
             { name: "Spain", code: "+34", flag: "🇪🇸" },
-            { name: "Canada", code: "+1", flag: "🇨🇦" },
-            { name: "Australia", code: "+61", flag: "🇦🇺" }
-        ];
-
-        // ========================================
-        // CONFIGURATION FOR YOUR SPOTZY AGENT
-        // ========================================
-        const SPOTZY_CONFIG = {
-            // Call API settings
-            apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
-            assistantId: 7018, // <-- CHANGE THIS TO YOUR AGENT'S ID
-            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212', // <-- CHANGE THIS TO YOUR API KEY
+            { name: "Romania", code: "+40", flag: "🇷🇴" },
+            { name: "Poland", code: "+48", flag: "🇵🇱" },
+            { name: "Netherlands", code: "+31", flag: "🇳🇱" },
+            { name: "Belgium", code: "+32", flag: "🇧🇪" },
+            { name: "Switzerland", code: "+41", flag: "🇨🇭" },
+            { name: "Austria", code: "+43", flag: "🇦🇹" },
+            { name: "Portugal", code: "+351", flag: "🇵🇹" },
+            { name: "Sweden", code: "+46", flag: "🇸🇪" },
+            { name: "Norway", code: "+47", flag: "🇳🇴" },
+            { name: "Denmark", code: "+45", flag: "🇩🇰" },
+            { name: "Finland", code: "+358", flag: "🇫🇮" },
+            { name: "Ireland", code: "+353", flag: "🇮🇪" },
+            { name: "Czech Republic", code: "+420", flag: "🇨🇿" },
+            { name: "Hungary", code: "+36", flag: "🇭🇺" },
+            { name: "Bulgaria", code: "+359", flag: "🇧🇬" },
+            { name: "Croatia", code: "+385", flag: "🇭🇷" },
+            { name: "Serbia", code: "+381", flag: "🇷🇸" },
+            { name: "Ukraine", code: "+380", flag: "🇺🇦" },
+            { name: "Russia", code: "+7", flag: "🇷🇺" },
+            { name: "Slovakia", code: "+421", flag: "🇸🇰" },
+            { name: "Slovenia", code: "+386", flag: "🇸🇮" },
+            { name: "Lithuania", code: "+370", flag: "🇱🇹" },
+            { name: "Latvia", code: "+371", flag: "🇱🇻" },
+            { name: "Estonia", code: "+372", flag: "🇪🇪" },
             
-            // Lead API settings  
-            leadApiUrl: 'https://platform.spotzyai.com/api/user/lead',
-            campaignId: 4425, // <-- YOUR CAMPAIGN ID
-            leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596' // <-- YOUR LEAD API KEY
-        };
+            // North America
+            { name: "United States", code: "+1", flag: "🇺🇸" },
+            { name: "Canada", code: "+1", flag: "🇨🇦" },
+            { name: "Mexico", code: "+52", flag: "🇲🇽" },
+            
+            // Asia-Pacific
+            { name: "Australia", code: "+61", flag: "🇦🇺" },
+            { name: "New Zealand", code: "+64", flag: "🇳🇿" },
+            { name: "Japan", code: "+81", flag: "🇯🇵" },
+            { name: "China", code: "+86", flag: "🇨🇳" },
+            { name: "South Korea", code: "+82", flag: "🇰🇷" },
+            { name: "India", code: "+91", flag: "🇮🇳" },
+            { name: "Singapore", code: "+65", flag: "🇸🇬" },
+            { name: "Thailand", code: "+66", flag: "🇹🇭" },
+            { name: "Malaysia", code: "+60", flag: "🇲🇾" },
+            { name: "Philippines", code: "+63", flag: "🇵🇭" },
+            { name: "Indonesia", code: "+62", flag: "🇮🇩" },
+            { name: "Vietnam", code: "+84", flag: "🇻🇳" },
+            { name: "Hong Kong", code: "+852", flag: "🇭🇰" },
+            { name: "Taiwan", code: "+886", flag: "🇹🇼" },
+            
+            // South America
+            { name: "Brazil", code: "+55", flag: "🇧🇷" },
+            { name: "Argentina", code: "+54", flag: "🇦🇷" },
+            { name: "Chile", code: "+56", flag: "🇨🇱" },
+            { name: "Colombia", code: "+57", flag: "🇨🇴" },
+            { name: "Peru", code: "+51", flag: "🇵🇪" },
+            
+            // Africa
+            { name: "South Africa", code: "+27", flag: "🇿🇦" },
+            { name: "Nigeria", code: "+234", flag: "🇳🇬" },
+            { name: "Kenya", code: "+254", flag: "🇰🇪" },
+            { name: "Morocco", code: "+212", flag: "🇲🇦" },
+            
+            // Other / Custom Code Option
+            { name: "Other / Custom Code", code: "custom", flag: "🌍" }
+        ];
 
         // Array of sample Florida addresses for randomization
         const floridaAddresses = [
@@ -525,6 +608,21 @@
             "7171 Southwest 9th Street, Pembroke Pines, FL 33023"
         ];
 
+        // ========================================
+        // CONFIGURATION FOR YOUR SPOTZY AGENT
+        // ========================================
+        const SPOTZY_CONFIG = {
+            // Call API settings
+            apiUrl: 'https://platform.spotzyai.com/api/user/make_call',
+            assistantId: 7018, // <-- CHANGE THIS TO YOUR AGENT'S ID
+            apiKey: '628|Mtyo039FY3usr1NInQqUqMZclnqlFAHV1cQrRZVU27730212', // <-- CHANGE THIS TO YOUR API KEY
+            
+            // Lead API settings  
+            leadApiUrl: 'https://platform.spotzyai.com/api/user/lead',
+            campaignId: 4425, // <-- YOUR CAMPAIGN ID
+            leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596' // <-- YOUR LEAD API KEY
+        };
+
         // Set a random Florida address on page load
         window.addEventListener('DOMContentLoaded', function() {
             const addressInput = document.getElementById('address');
@@ -539,6 +637,8 @@
         const countryList = document.getElementById('countryList');
         const selectedFlag = document.getElementById('selectedFlag');
         const selectedCode = document.getElementById('selectedCode');
+        const customCodeInput = document.getElementById('customCodeInput');
+        const customCode = document.getElementById('customCode');
         
         // Form elements
         const form = document.getElementById('callbackForm');
@@ -551,6 +651,7 @@
         const phoneInput = document.getElementById('phone');
 
         let selectedCountry = countries[0]; // Default: Cyprus
+        let isCustomCode = false;
 
         // Render country list
         function renderCountries(filter = '') {
@@ -563,26 +664,81 @@
                 <div class="country-option" data-code="${country.code}" data-flag="${country.flag}" data-name="${country.name}">
                     <span class="country-flag">${country.flag}</span>
                     <span class="country-name">${country.name}</span>
-                    <span class="country-code">${country.code}</span>
+                    <span class="country-code">${country.code === 'custom' ? '' : country.code}</span>
                 </div>
             `).join('');
 
             // Add click listeners
             document.querySelectorAll('.country-option').forEach(option => {
                 option.addEventListener('click', function() {
-                    selectedCountry = {
-                        name: this.dataset.name,
-                        code: this.dataset.code,
-                        flag: this.dataset.flag
-                    };
-                    selectedFlag.textContent = selectedCountry.flag;
-                    selectedCode.textContent = selectedCountry.code;
-                    countryDropdown.classList.remove('active');
-                    countrySearch.value = '';
-                    phoneInput.focus();
+                    const code = this.dataset.code;
+                    
+                    if (code === 'custom') {
+                        // Show custom code input
+                        customCodeInput.classList.add('active');
+                        isCustomCode = true;
+                        selectedFlag.textContent = this.dataset.flag;
+                        customCode.focus();
+                    } else {
+                        // Regular country selection
+                        selectedCountry = {
+                            name: this.dataset.name,
+                            code: this.dataset.code,
+                            flag: this.dataset.flag
+                        };
+                        selectedFlag.textContent = selectedCountry.flag;
+                        selectedCode.textContent = selectedCountry.code;
+                        isCustomCode = false;
+                        customCodeInput.classList.remove('active');
+                        countryDropdown.classList.remove('active');
+                        countrySearch.value = '';
+                        phoneInput.focus();
+                    }
                 });
             });
         }
+
+        // Handle custom code input
+        customCode.addEventListener('input', function() {
+            let value = this.value;
+            
+            // Ensure it starts with +
+            if (value && !value.startsWith('+')) {
+                value = '+' + value;
+            }
+            
+            // Only allow + and numbers
+            value = value.replace(/[^0-9+]/g, '');
+            
+            // Only allow + at the beginning
+            if (value.split('+').length > 2) {
+                value = '+' + value.replace(/\+/g, '');
+            }
+            
+            this.value = value;
+            
+            // Update selected code display
+            if (value && value.length > 1) {
+                selectedCode.textContent = value;
+                selectedCountry = {
+                    name: 'Custom',
+                    code: value,
+                    flag: '🌍'
+                };
+            }
+        });
+
+        // Close custom code input and dropdown when custom code is entered
+        customCode.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (this.value && this.value.length > 1) {
+                    customCodeInput.classList.remove('active');
+                    countryDropdown.classList.remove('active');
+                    phoneInput.focus();
+                }
+            }
+        });
 
         // Toggle dropdown
         countrySelectBtn.addEventListener('click', function(e) {
@@ -590,6 +746,8 @@
             countryDropdown.classList.toggle('active');
             if (countryDropdown.classList.contains('active')) {
                 countrySearch.focus();
+            } else {
+                customCodeInput.classList.remove('active');
             }
         });
 
@@ -602,6 +760,7 @@
         document.addEventListener('click', function(e) {
             if (!countrySelectBtn.contains(e.target) && !countryDropdown.contains(e.target)) {
                 countryDropdown.classList.remove('active');
+                customCodeInput.classList.remove('active');
                 countrySearch.value = '';
             }
         });
@@ -658,6 +817,15 @@
             if (!address || address.length < 10) {
                 showError('Please enter a valid address');
                 return;
+            }
+
+            // Validate custom code if selected
+            if (isCustomCode) {
+                const customCodeValue = selectedCountry.code;
+                if (!customCodeValue || customCodeValue.length < 2 || !customCodeValue.startsWith('+')) {
+                    showError('Please enter a valid country code (e.g., +123)');
+                    return;
+                }
             }
 
             // Show loading state
@@ -792,6 +960,13 @@
             const currentAddress = document.getElementById('address').value;
             form.reset();
             document.getElementById('address').value = currentAddress;
+            
+            // Reset country selector to Cyprus (default)
+            selectedCountry = countries[0];
+            selectedFlag.textContent = selectedCountry.flag;
+            selectedCode.textContent = selectedCountry.code;
+            isCustomCode = false;
+            customCodeInput.classList.remove('active');
             
             // Reset button state
             submitBtn.disabled = false;
