@@ -345,6 +345,21 @@
             display: block;
         }
 
+        .phone-error {
+            color: #c33;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .phone-error.active {
+            display: block;
+        }
+
+        input.error {
+            border-color: #c33 !important;
+        }
+
         .notification {
             position: fixed;
             top: 20px;
@@ -434,8 +449,8 @@
                         <div class="country-selector">
                             <button type="button" class="country-select-button" id="countrySelectBtn">
                                 <span>
-                                    <span class="country-flag" id="selectedFlag">🇨🇾</span>
-                                    <span class="country-code" id="selectedCode">+357</span>
+                                    <span class="country-flag" id="selectedFlag">🌐</span>
+                                    <span class="country-code" id="selectedCode">Select</span>
                                 </span>
                                 <span class="dropdown-arrow">▼</span>
                             </button>
@@ -454,10 +469,12 @@
                             type="tel" 
                             id="phone" 
                             name="phone" 
-                            placeholder="96123456" 
+                            placeholder="Select country first" 
                             required
+                            disabled
                         >
                     </div>
+                    <div class="phone-error" id="phoneError"></div>
                 </div>
 
                 <div class="form-group">
@@ -510,83 +527,83 @@
         // ========================================
         const countries = [
             // Mediterranean & Middle East
-            { name: "Cyprus", code: "+357", flag: "🇨🇾" },
-            { name: "Greece", code: "+30", flag: "🇬🇷" },
-            { name: "Israel", code: "+972", flag: "🇮🇱" },
-            { name: "Turkey", code: "+90", flag: "🇹🇷" },
-            { name: "Lebanon", code: "+961", flag: "🇱🇧" },
-            { name: "Jordan", code: "+962", flag: "🇯🇴" },
-            { name: "Egypt", code: "+20", flag: "🇪🇬" },
-            { name: "Saudi Arabia", code: "+966", flag: "🇸🇦" },
-            { name: "United Arab Emirates", code: "+971", flag: "🇦🇪" },
+            { name: "Cyprus", code: "+357", flag: "🇨🇾", phoneLength: 8 },
+            { name: "Greece", code: "+30", flag: "🇬🇷", phoneLength: 10 },
+            { name: "Israel", code: "+972", flag: "🇮🇱", phoneLength: 9 },
+            { name: "Turkey", code: "+90", flag: "🇹🇷", phoneLength: 10 },
+            { name: "Lebanon", code: "+961", flag: "🇱🇧", phoneLength: 8 },
+            { name: "Jordan", code: "+962", flag: "🇯🇴", phoneLength: 9 },
+            { name: "Egypt", code: "+20", flag: "🇪🇬", phoneLength: 10 },
+            { name: "Saudi Arabia", code: "+966", flag: "🇸🇦", phoneLength: 9 },
+            { name: "United Arab Emirates", code: "+971", flag: "🇦🇪", phoneLength: 9 },
             
             // Europe
-            { name: "United Kingdom", code: "+44", flag: "🇬🇧" },
-            { name: "Germany", code: "+49", flag: "🇩🇪" },
-            { name: "France", code: "+33", flag: "🇫🇷" },
-            { name: "Italy", code: "+39", flag: "🇮🇹" },
-            { name: "Spain", code: "+34", flag: "🇪🇸" },
-            { name: "Romania", code: "+40", flag: "🇷🇴" },
-            { name: "Poland", code: "+48", flag: "🇵🇱" },
-            { name: "Netherlands", code: "+31", flag: "🇳🇱" },
-            { name: "Belgium", code: "+32", flag: "🇧🇪" },
-            { name: "Switzerland", code: "+41", flag: "🇨🇭" },
-            { name: "Austria", code: "+43", flag: "🇦🇹" },
-            { name: "Portugal", code: "+351", flag: "🇵🇹" },
-            { name: "Sweden", code: "+46", flag: "🇸🇪" },
-            { name: "Norway", code: "+47", flag: "🇳🇴" },
-            { name: "Denmark", code: "+45", flag: "🇩🇰" },
-            { name: "Finland", code: "+358", flag: "🇫🇮" },
-            { name: "Ireland", code: "+353", flag: "🇮🇪" },
-            { name: "Czech Republic", code: "+420", flag: "🇨🇿" },
-            { name: "Hungary", code: "+36", flag: "🇭🇺" },
-            { name: "Bulgaria", code: "+359", flag: "🇧🇬" },
-            { name: "Croatia", code: "+385", flag: "🇭🇷" },
-            { name: "Serbia", code: "+381", flag: "🇷🇸" },
-            { name: "Ukraine", code: "+380", flag: "🇺🇦" },
-            { name: "Russia", code: "+7", flag: "🇷🇺" },
-            { name: "Slovakia", code: "+421", flag: "🇸🇰" },
-            { name: "Slovenia", code: "+386", flag: "🇸🇮" },
-            { name: "Lithuania", code: "+370", flag: "🇱🇹" },
-            { name: "Latvia", code: "+371", flag: "🇱🇻" },
-            { name: "Estonia", code: "+372", flag: "🇪🇪" },
+            { name: "United Kingdom", code: "+44", flag: "🇬🇧", phoneLength: 10 },
+            { name: "Germany", code: "+49", flag: "🇩🇪", phoneLength: 11 },
+            { name: "France", code: "+33", flag: "🇫🇷", phoneLength: 9 },
+            { name: "Italy", code: "+39", flag: "🇮🇹", phoneLength: 10 },
+            { name: "Spain", code: "+34", flag: "🇪🇸", phoneLength: 9 },
+            { name: "Romania", code: "+40", flag: "🇷🇴", phoneLength: 9 },
+            { name: "Poland", code: "+48", flag: "🇵🇱", phoneLength: 9 },
+            { name: "Netherlands", code: "+31", flag: "🇳🇱", phoneLength: 9 },
+            { name: "Belgium", code: "+32", flag: "🇧🇪", phoneLength: 9 },
+            { name: "Switzerland", code: "+41", flag: "🇨🇭", phoneLength: 9 },
+            { name: "Austria", code: "+43", flag: "🇦🇹", phoneLength: 10 },
+            { name: "Portugal", code: "+351", flag: "🇵🇹", phoneLength: 9 },
+            { name: "Sweden", code: "+46", flag: "🇸🇪", phoneLength: 9 },
+            { name: "Norway", code: "+47", flag: "🇳🇴", phoneLength: 8 },
+            { name: "Denmark", code: "+45", flag: "🇩🇰", phoneLength: 8 },
+            { name: "Finland", code: "+358", flag: "🇫🇮", phoneLength: 9 },
+            { name: "Ireland", code: "+353", flag: "🇮🇪", phoneLength: 9 },
+            { name: "Czech Republic", code: "+420", flag: "🇨🇿", phoneLength: 9 },
+            { name: "Hungary", code: "+36", flag: "🇭🇺", phoneLength: 9 },
+            { name: "Bulgaria", code: "+359", flag: "🇧🇬", phoneLength: 9 },
+            { name: "Croatia", code: "+385", flag: "🇭🇷", phoneLength: 9 },
+            { name: "Serbia", code: "+381", flag: "🇷🇸", phoneLength: 9 },
+            { name: "Ukraine", code: "+380", flag: "🇺🇦", phoneLength: 9 },
+            { name: "Russia", code: "+7", flag: "🇷🇺", phoneLength: 10 },
+            { name: "Slovakia", code: "+421", flag: "🇸🇰", phoneLength: 9 },
+            { name: "Slovenia", code: "+386", flag: "🇸🇮", phoneLength: 9 },
+            { name: "Lithuania", code: "+370", flag: "🇱🇹", phoneLength: 8 },
+            { name: "Latvia", code: "+371", flag: "🇱🇻", phoneLength: 8 },
+            { name: "Estonia", code: "+372", flag: "🇪🇪", phoneLength: 8 },
             
             // North America
-            { name: "United States", code: "+1", flag: "🇺🇸" },
-            { name: "Canada", code: "+1", flag: "🇨🇦" },
-            { name: "Mexico", code: "+52", flag: "🇲🇽" },
+            { name: "United States", code: "+1", flag: "🇺🇸", phoneLength: 10 },
+            { name: "Canada", code: "+1", flag: "🇨🇦", phoneLength: 10 },
+            { name: "Mexico", code: "+52", flag: "🇲🇽", phoneLength: 10 },
             
             // Asia-Pacific
-            { name: "Australia", code: "+61", flag: "🇦🇺" },
-            { name: "New Zealand", code: "+64", flag: "🇳🇿" },
-            { name: "Japan", code: "+81", flag: "🇯🇵" },
-            { name: "China", code: "+86", flag: "🇨🇳" },
-            { name: "South Korea", code: "+82", flag: "🇰🇷" },
-            { name: "India", code: "+91", flag: "🇮🇳" },
-            { name: "Singapore", code: "+65", flag: "🇸🇬" },
-            { name: "Thailand", code: "+66", flag: "🇹🇭" },
-            { name: "Malaysia", code: "+60", flag: "🇲🇾" },
-            { name: "Philippines", code: "+63", flag: "🇵🇭" },
-            { name: "Indonesia", code: "+62", flag: "🇮🇩" },
-            { name: "Vietnam", code: "+84", flag: "🇻🇳" },
-            { name: "Hong Kong", code: "+852", flag: "🇭🇰" },
-            { name: "Taiwan", code: "+886", flag: "🇹🇼" },
+            { name: "Australia", code: "+61", flag: "🇦🇺", phoneLength: 9 },
+            { name: "New Zealand", code: "+64", flag: "🇳🇿", phoneLength: 9 },
+            { name: "Japan", code: "+81", flag: "🇯🇵", phoneLength: 10 },
+            { name: "China", code: "+86", flag: "🇨🇳", phoneLength: 11 },
+            { name: "South Korea", code: "+82", flag: "🇰🇷", phoneLength: 10 },
+            { name: "India", code: "+91", flag: "🇮🇳", phoneLength: 10 },
+            { name: "Singapore", code: "+65", flag: "🇸🇬", phoneLength: 8 },
+            { name: "Thailand", code: "+66", flag: "🇹🇭", phoneLength: 9 },
+            { name: "Malaysia", code: "+60", flag: "🇲🇾", phoneLength: 10 },
+            { name: "Philippines", code: "+63", flag: "🇵🇭", phoneLength: 10 },
+            { name: "Indonesia", code: "+62", flag: "🇮🇩", phoneLength: 11 },
+            { name: "Vietnam", code: "+84", flag: "🇻🇳", phoneLength: 9 },
+            { name: "Hong Kong", code: "+852", flag: "🇭🇰", phoneLength: 8 },
+            { name: "Taiwan", code: "+886", flag: "🇹🇼", phoneLength: 9 },
             
             // South America
-            { name: "Brazil", code: "+55", flag: "🇧🇷" },
-            { name: "Argentina", code: "+54", flag: "🇦🇷" },
-            { name: "Chile", code: "+56", flag: "🇨🇱" },
-            { name: "Colombia", code: "+57", flag: "🇨🇴" },
-            { name: "Peru", code: "+51", flag: "🇵🇪" },
+            { name: "Brazil", code: "+55", flag: "🇧🇷", phoneLength: 11 },
+            { name: "Argentina", code: "+54", flag: "🇦🇷", phoneLength: 10 },
+            { name: "Chile", code: "+56", flag: "🇨🇱", phoneLength: 9 },
+            { name: "Colombia", code: "+57", flag: "🇨🇴", phoneLength: 10 },
+            { name: "Peru", code: "+51", flag: "🇵🇪", phoneLength: 9 },
             
             // Africa
-            { name: "South Africa", code: "+27", flag: "🇿🇦" },
-            { name: "Nigeria", code: "+234", flag: "🇳🇬" },
-            { name: "Kenya", code: "+254", flag: "🇰🇪" },
-            { name: "Morocco", code: "+212", flag: "🇲🇦" },
+            { name: "South Africa", code: "+27", flag: "🇿🇦", phoneLength: 9 },
+            { name: "Nigeria", code: "+234", flag: "🇳🇬", phoneLength: 10 },
+            { name: "Kenya", code: "+254", flag: "🇰🇪", phoneLength: 9 },
+            { name: "Morocco", code: "+212", flag: "🇲🇦", phoneLength: 9 },
             
             // Other / Custom Code Option
-            { name: "Other / Custom Code", code: "custom", flag: "🌍" }
+            { name: "Other / Custom Code", code: "custom", flag: "🌍", phoneLength: null }
         ];
 
         // Array of sample Florida addresses for randomization
@@ -623,7 +640,8 @@
             leadApiKey: '682|HB0B2KNZqKHYyOsj72qo8l7vLU1ZbHpKhXvkwWk9d4bb7596', // <-- YOUR LEAD API KEY
             
             // Make.com Webhook
-            webhookUrl: 'https://hook.eu2.make.com/as9hhqsp6usr04kcppa3prdkdyav58ep'
+            webhookUrl: 'https://hook.eu2.make.com/as9hhqsp6usr04kcppa3prdkdyav58ep',
+            webhookSecret: 'spotzy_secret_2024' // Secret token for verification
         };
 
         // Set a random Florida address on page load
@@ -653,8 +671,83 @@
         const successSection = document.getElementById('successSection');
         const phoneInput = document.getElementById('phone');
 
-        let selectedCountry = countries[0]; // Default: Cyprus
+        let selectedCountry = null; // NO DEFAULT - User must select
         let isCustomCode = false;
+
+        // Phone error element
+        const phoneError = document.getElementById('phoneError');
+
+        // Function to validate phone number based on selected country
+        function validatePhoneNumber() {
+            const phone = phoneInput.value.replace(/\D/g, '');
+            
+            // If no country selected
+            if (!selectedCountry) {
+                phoneError.textContent = 'Please select a country code first';
+                phoneError.classList.add('active');
+                phoneInput.classList.add('error');
+                return false;
+            }
+
+            // If custom code, allow any length between 6-15
+            if (isCustomCode || selectedCountry.phoneLength === null) {
+                if (phone.length < 6) {
+                    phoneError.textContent = 'Phone number is too short (minimum 6 digits)';
+                    phoneError.classList.add('active');
+                    phoneInput.classList.add('error');
+                    return false;
+                } else if (phone.length > 15) {
+                    phoneError.textContent = 'Phone number is too long (maximum 15 digits)';
+                    phoneError.classList.add('active');
+                    phoneInput.classList.add('error');
+                    return false;
+                }
+            } else {
+                // Validate against expected length for this country
+                const expectedLength = selectedCountry.phoneLength;
+                
+                if (phone.length === 0) {
+                    phoneError.textContent = 'Phone number is required';
+                    phoneError.classList.add('active');
+                    phoneInput.classList.add('error');
+                    return false;
+                } else if (phone.length < expectedLength) {
+                    phoneError.textContent = `Phone number should be ${expectedLength} digits (currently ${phone.length})`;
+                    phoneError.classList.add('active');
+                    phoneInput.classList.add('error');
+                    return false;
+                } else if (phone.length > expectedLength) {
+                    phoneError.textContent = `Phone number should be ${expectedLength} digits, not ${phone.length} digits`;
+                    phoneError.classList.add('active');
+                    phoneInput.classList.add('error');
+                    return false;
+                }
+            }
+
+            // Valid!
+            phoneError.classList.remove('active');
+            phoneInput.classList.remove('error');
+            return true;
+        }
+
+        // Function to update phone placeholder based on country
+        function updatePhonePlaceholder() {
+            if (!selectedCountry) {
+                phoneInput.placeholder = 'Select country first';
+                phoneInput.disabled = true;
+                return;
+            }
+
+            phoneInput.disabled = false;
+            
+            if (isCustomCode || selectedCountry.phoneLength === null) {
+                phoneInput.placeholder = 'Enter phone number';
+            } else {
+                // Create placeholder with right number of digits
+                const digits = '0'.repeat(selectedCountry.phoneLength);
+                phoneInput.placeholder = digits.replace(/(\d{3})/g, '$1 ').trim();
+            }
+        }
 
         // Render country list
         function renderCountries(filter = '') {
@@ -684,17 +777,20 @@
                         customCode.focus();
                     } else {
                         // Regular country selection
-                        selectedCountry = {
-                            name: this.dataset.name,
-                            code: this.dataset.code,
-                            flag: this.dataset.flag
-                        };
+                        const countryData = countries.find(c => c.code === code && c.name === this.dataset.name);
+                        selectedCountry = countryData;
                         selectedFlag.textContent = selectedCountry.flag;
                         selectedCode.textContent = selectedCountry.code;
                         isCustomCode = false;
                         customCodeInput.classList.remove('active');
                         countryDropdown.classList.remove('active');
                         countrySearch.value = '';
+                        
+                        // Update placeholder and enable input
+                        updatePhonePlaceholder();
+                        phoneInput.value = ''; // Clear phone on country change
+                        phoneError.classList.remove('active');
+                        phoneInput.classList.remove('error');
                         phoneInput.focus();
                     }
                 });
@@ -726,8 +822,11 @@
                 selectedCountry = {
                     name: 'Custom',
                     code: value,
-                    flag: '🌍'
+                    flag: '🌍',
+                    phoneLength: null // Allow flexible length for custom codes
                 };
+                isCustomCode = true;
+                updatePhonePlaceholder();
             }
         });
 
@@ -738,6 +837,10 @@
                 if (this.value && this.value.length > 1) {
                     customCodeInput.classList.remove('active');
                     countryDropdown.classList.remove('active');
+                    updatePhonePlaceholder();
+                    phoneInput.value = '';
+                    phoneError.classList.remove('active');
+                    phoneInput.classList.remove('error');
                     phoneInput.focus();
                 }
             }
@@ -771,6 +874,9 @@
         // Initialize country list
         renderCountries();
 
+        // Initialize phone input state
+        updatePhonePlaceholder();
+
         // Name input - allow only letters and spaces
         const nameInput = document.getElementById('name');
         
@@ -783,6 +889,9 @@
         phoneInput.addEventListener('input', function(e) {
             // Only keep numbers
             this.value = this.value.replace(/\D/g, '');
+            
+            // Validate as they type
+            validatePhoneNumber();
         });
 
         // Notification function
@@ -811,9 +920,18 @@
                 showError('Please enter a valid name');
                 return;
             }
+
+            // Check if country is selected
+            if (!selectedCountry) {
+                showError('Please select a country code');
+                countrySelectBtn.focus();
+                return;
+            }
             
-            if (phone.length < 6 || phone.length > 15) {
-                showError('Please enter a valid phone number');
+            // Validate phone number
+            if (!validatePhoneNumber()) {
+                showError('Please enter a valid phone number for the selected country');
+                phoneInput.focus();
                 return;
             }
 
@@ -908,29 +1026,38 @@
 
                 // Third API call - Send to Make.com Webhook
                 console.log('🔗 Sending data to Make.com webhook...');
-                const webhookData = {
-                    customer_name: name,
-                    phone_number: fullPhoneNumber,
-                    property_address: address,
-                    timestamp: new Date().toISOString()
-                };
+                
+                // Validate required fields before sending
+                if (!name || !fullPhoneNumber || !address) {
+                    console.error('❌ Missing required fields for webhook');
+                } else {
+                    const webhookData = {
+                        customer_name: name,
+                        phone_number: fullPhoneNumber,
+                        property_address: address,
+                        timestamp: new Date().toISOString(),
+                        source: 'renovation_form',
+                        secret: SPOTZY_CONFIG.webhookSecret // For verification in Make.com
+                    };
 
-                try {
-                    const webhookResponse = await fetch(SPOTZY_CONFIG.webhookUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(webhookData)
-                    });
-                    
-                    if (webhookResponse.ok) {
-                        console.log('✅ Webhook triggered successfully');
-                    } else {
-                        console.warn('⚠️ Webhook failed but continuing...');
+                    try {
+                        const webhookResponse = await fetch(SPOTZY_CONFIG.webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(webhookData)
+                        });
+                        
+                        if (webhookResponse.ok) {
+                            console.log('✅ Webhook triggered successfully');
+                            console.log('📤 Data sent:', webhookData);
+                        } else {
+                            console.warn('⚠️ Webhook failed but continuing...', webhookResponse.status);
+                        }
+                    } catch (webhookError) {
+                        console.warn('⚠️ Webhook error (non-critical):', webhookError);
                     }
-                } catch (webhookError) {
-                    console.warn('⚠️ Webhook error (non-critical):', webhookError);
                 }
 
                 // Check both responses
@@ -991,12 +1118,16 @@
             form.reset();
             document.getElementById('address').value = currentAddress;
             
-            // Reset country selector to Cyprus (default)
-            selectedCountry = countries[0];
-            selectedFlag.textContent = selectedCountry.flag;
-            selectedCode.textContent = selectedCountry.code;
+            // Reset country selector to no selection
+            selectedCountry = null;
+            selectedFlag.textContent = '🌐';
+            selectedCode.textContent = 'Select';
             isCustomCode = false;
             customCodeInput.classList.remove('active');
+            phoneInput.disabled = true;
+            phoneInput.placeholder = 'Select country first';
+            phoneError.classList.remove('active');
+            phoneInput.classList.remove('error');
             
             // Reset button state
             submitBtn.disabled = false;
