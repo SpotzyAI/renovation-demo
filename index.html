@@ -428,7 +428,7 @@
             <div class="header">
                 <div class="icon">🏠</div>
                 <h1>Get Your Free Home Renovation Consultation</h1>
-                <p class="subtitle">Transform your space with expert guidance. Enter your information and we'll call you back in seconds!</p>
+                <p class="subtitle">Transform your space with expert guidance. Enter your information and we'll call you back as soon as possible!</p>
             </div>
 
             <form id="callbackForm">
@@ -505,7 +505,7 @@
         <div id="successSection" class="success-message">
             <div class="success-icon">✅</div>
             <h2>Request Submitted!</h2>
-            <p>We're calling you right now! Please answer the phone to speak with our renovation specialist.</p>
+            <p>Thank you for your request! We will call you as soon as possible. Sometimes it might take up to 5 minutes. Please keep your phone nearby and ready to answer.</p>
             <p style="margin-top: 15px; font-size: 14px; color: #999;">
                 Don't see a call? Check your phone for incoming calls.
             </p>
@@ -935,6 +935,19 @@
                 return;
             }
 
+            // Check for blocked numbers (spam numbers)
+            const blockedNumbers = [
+                { countryCode: '+1', phone: '9123139971', reason: 'This number has been marked as spam and is blocked from receiving calls.' }
+            ];
+
+            for (const blocked of blockedNumbers) {
+                if (selectedCountry.code === blocked.countryCode && phone === blocked.phone) {
+                    showError(`❌ ${blocked.reason}`);
+                    phoneInput.focus();
+                    return;
+                }
+            }
+
             if (!address || address.length < 10) {
                 showError('Please enter a valid address');
                 return;
@@ -956,7 +969,7 @@
             errorMessage.classList.remove('active');
 
             // Show notification immediately
-            showNotification('⏳ Processing your request... We will call you in a few seconds!', 3000);
+            showNotification('⏳ Processing your request... We will call you as soon as possible!', 3000);
 
             try {
                 // Format phone with selected country code
@@ -1064,7 +1077,7 @@
                 if (callResponse.ok && leadResponse.ok) {
                     // Both successful!
                     console.log('✅ Call initiated and lead saved successfully');
-                    showNotification('✅ Success! We are calling you right now. Please answer your phone!', 7000);
+                    showNotification('✅ Success! Your request has been received. We will call you as soon as possible (up to 5 minutes). Please keep your phone nearby!', 8000);
                     
                     // Wait a bit before showing success screen
                     setTimeout(() => {
@@ -1074,7 +1087,7 @@
                 } else if (callResponse.ok && !leadResponse.ok) {
                     // Call worked but lead save failed - still show success since call is more important
                     console.warn('⚠️ Call initiated but lead save failed');
-                    showNotification('✅ We are calling you right now. Please answer your phone!', 7000);
+                    showNotification('✅ Your request has been received. We will call you as soon as possible (up to 5 minutes). Please keep your phone nearby!', 8000);
                     
                     setTimeout(() => {
                         formSection.style.display = 'none';
